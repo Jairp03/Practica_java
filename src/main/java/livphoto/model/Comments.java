@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "posts")
-public class Post {
+@Table(name = "comentarios")
+public class Comments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,22 +13,17 @@ public class Post {
 
     private String contenido;
 
-    private String imagenUrl;
-
     private LocalDateTime fecha;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private Users user;
 
-    public Post() {
-        this.fecha = LocalDateTime.now();
-    }
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-    public Post(String contenido, String imagenUrl, Users user) {
-        this.contenido = contenido;
-        this.imagenUrl = imagenUrl;
-        this.user = user;
+    public Comments() {
         this.fecha = LocalDateTime.now();
     }
 
@@ -44,14 +39,6 @@ public class Post {
         this.contenido = contenido;
     }
 
-    public String getImagenUrl() {
-        return imagenUrl;
-    }
-
-    public void setImagenUrl(String imagenUrl) {
-        this.imagenUrl = imagenUrl;
-    }
-
     public LocalDateTime getFecha() {
         return fecha;
     }
@@ -62,5 +49,13 @@ public class Post {
 
     public void setUser(Users user) {
         this.user = user;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
     }
 }

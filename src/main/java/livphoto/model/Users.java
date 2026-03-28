@@ -13,6 +13,7 @@ public class Users {
     private String nombre;
     private String email;
     private String bio;
+    private String password;
 
     public Users() {}
 
@@ -48,5 +49,13 @@ public class Users {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
