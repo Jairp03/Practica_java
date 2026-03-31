@@ -4,6 +4,7 @@ import livphoto.model.Post;
 import livphoto.repository.PostRepository;
 import livphoto.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -21,9 +22,18 @@ public class PostController {
 
     @PostMapping
     public Post createPost(@RequestBody Post post) {
+
+        // 🔥 Obtener usuario del token
+        String email = (String) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        // 🔥 Asignar usuario al post
+        post.setUserEmail(email);
+
         return postRepository.save(post);
     }
-
     @GetMapping
     public List<Post> getAllPosts() {
         return postRepository.findAll();

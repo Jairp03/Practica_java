@@ -15,6 +15,8 @@ public class Comments {
 
     private LocalDateTime fecha;
 
+    private String userEmail;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private Users user;
@@ -57,5 +59,13 @@ public class Comments {
 
     public void setPost(Post post) {
         this.post = post;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }

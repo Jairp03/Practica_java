@@ -3,6 +3,7 @@ package livphoto.controller;
 import livphoto.model.Comments;
 import livphoto.repository.CommentsRepository;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -17,8 +18,18 @@ public class CommentsController {
     }
 
     @PostMapping
-    public Comments createComment(@RequestBody Comments comments) {
-        return commentsRepository.save(comments);
+    public Comments createComment(@RequestBody Comments comment) {
+
+        // 🔥 Obtener usuario del token
+        String email = (String) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        // 🔥 Asignar usuario automáticamente
+        comment.setUserEmail(email);
+
+        return commentsRepository.save(comment);
     }
 
     @GetMapping

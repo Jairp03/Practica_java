@@ -6,6 +6,7 @@ import livphoto.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -33,18 +34,20 @@ public class AuthController {
 
     // LOGIN
     @PostMapping("/login")
-    public String login(@RequestBody Users user) {
+    public java.util.Map<String, String> login(@RequestBody Users user) {
 
         Users existingUser = userRepository.findByEmail(user.getEmail());
 
         if (existingUser == null) {
-            return "Usuario no encontrado ❌";
+            throw new RuntimeException("Usuario no encontrado");
         }
 
         if (!passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
-            return "Contraseña incorrecta ❌";
+            throw new RuntimeException("Contraseña incorrecta");
         }
 
-        return jwtUtil.generateToken(existingUser.getEmail());
+        String token = jwtUtil.generateToken(existingUser.getEmail());
+
+        return java.util.Map.of("token", token);
     }
 }

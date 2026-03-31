@@ -17,6 +17,8 @@ public class Post {
 
     private LocalDateTime fecha;
 
+    private String userEmail;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private Users user;
@@ -25,11 +27,12 @@ public class Post {
         this.fecha = LocalDateTime.now();
     }
 
-    public Post(String contenido, String imagenUrl, Users user) {
+    public Post(String contenido, String imagenUrl, Users user, String userEmail) {
         this.contenido = contenido;
         this.imagenUrl = imagenUrl;
         this.user = user;
         this.fecha = LocalDateTime.now();
+        this.userEmail = userEmail;
     }
 
     public Long getId() {
@@ -62,5 +65,13 @@ public class Post {
 
     public void setUser(Users user) {
         this.user = user;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }

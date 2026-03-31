@@ -1,40 +1,56 @@
 package livphoto.controller;
 
 import livphoto.model.Like;
+import livphoto.model.Post;
+import livphoto.model.Users;
 import livphoto.repository.LikeRepository;
-import org.springframework.web.bind.annotation.*;
+import livphoto.repository.PostRepository;
+import livphoto.repository.UserRepository;
 
-import java.util.List;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/likes")
 public class LikeController {
 
     private final LikeRepository likeRepository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public LikeController(LikeRepository likeRepository) {
+    public LikeController(
+            LikeRepository likeRepository,
+            PostRepository postRepository,
+            UserRepository userRepository) {
+
         this.likeRepository = likeRepository;
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
-    @PostMapping
-    public String createLike(@RequestBody Like like) {
+    @PostMapping("/post/{postId}")
+    public String likePost(@PathVariable Long postId) {
 
-        Long userId = like.getUser().getId();
-        Long postId = like.getPost().getId();
+        String email = (String) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
 
-        boolean exists = likeRepository.existsByUserIdAndPostId(userId, postId);
+        Users user = userRepository.findByEmail(email);
 
-        if (exists) {
+        if (likeRepository.existsByUserIdAndPostId(user.getId(), postId)) {
             return "Ya diste like a este post 😅";
         }
 
-        likeRepository.save(like);
-        return "Like guardado ❤️";
-    }
+        Post post = postRepository.findById(postId).orElseThrow();
 
-    @GetMapping
-    public List<Like> getAllLikes() {
-        return likeRepository.findAll();
+        Like like = new Like();
+        like.setUser(user);
+        like.setPost(post);
+
+        likeRepository.save(like);
+
+        return "Like guardado ❤️";
     }
 
     @GetMapping("/count/{postId}")
