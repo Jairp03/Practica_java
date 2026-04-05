@@ -9,4 +9,5 @@ public interface CommentsRepository extends JpaRepository<Comments, Long> {
 
     List<Comments> findByPostId(Long postId);
 
+    long countByPostId(Long postId);
 }

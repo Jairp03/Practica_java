@@ -53,6 +53,27 @@ public class LikeController {
         return "Like guardado ❤️";
     }
 
+    @DeleteMapping("/post/{postId}")
+    public String unlikePost(@PathVariable Long postId) {
+
+        String email = (String) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        Users user = userRepository.findByEmail(email);
+
+        Like like = likeRepository.findByUserIdAndPostId(user.getId(), postId);
+
+        if (like == null) {
+            return "No habías dado like a este post 🤔";
+        }
+
+        likeRepository.delete(like);
+
+        return "Like eliminado 💔";
+    }
+
     @GetMapping("/count/{postId}")
     public long countLikesByPost(@PathVariable Long postId) {
         return likeRepository.countByPostId(postId);
